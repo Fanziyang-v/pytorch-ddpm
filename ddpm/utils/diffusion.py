@@ -51,7 +51,7 @@ class GaussianDiffusion:
             Tensor: more clear images after reverse process
         """
         assert xt.shape == noise.shape, "xt.shape != noise.shape"
-        z = torch.randn_like(xt).to(t.device) if t > 0 else 0
+        z = torch.randn_like(xt).to(t.device) if (t > 0).all() else 0
         alpha = self.alphas[t].to(t.device)
         beta = self.betas[t].to(t.device)
         sqrt_one_minus_alphas_cum_prod = self.sqrt_one_minus_alphas_cum_prod[t].to(
