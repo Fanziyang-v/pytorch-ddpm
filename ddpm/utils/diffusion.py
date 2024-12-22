@@ -33,10 +33,10 @@ class GaussianDiffusion:
             Tensor: noisy images after diffusion process
         """
         assert x0.shape == noise.shape, "x0.shape != noise.shape"
-        sqrt_alphas_cum_prod = self.sqrt_alphas_cum_prod[t].to(t.device)
-        sqrt_one_minus_alphas_cum_prod = self.sqrt_one_minus_alphas_cum_prod[t].to(
+        sqrt_alphas_cum_prod = self.sqrt_alphas_cum_prod.to(t.device)[t]
+        sqrt_one_minus_alphas_cum_prod = self.sqrt_one_minus_alphas_cum_prod.to(
             t.device
-        )
+        )[t]
         return sqrt_alphas_cum_prod * x0 + sqrt_one_minus_alphas_cum_prod * noise
 
     def reverse(self, xt: Tensor, noise: Tensor, t: Tensor) -> Tensor:
@@ -52,11 +52,11 @@ class GaussianDiffusion:
         """
         assert xt.shape == noise.shape, "xt.shape != noise.shape"
         z = torch.randn_like(xt).to(t.device) if (t > 0).all() else 0
-        alpha = self.alphas[t].to(t.device)
-        beta = self.betas[t].to(t.device)
-        sqrt_one_minus_alphas_cum_prod = self.sqrt_one_minus_alphas_cum_prod[t].to(
+        alpha = self.alphas.to(t.device)[t]
+        beta = self.betas.to(t.device)[t]
+        sqrt_one_minus_alphas_cum_prod = self.sqrt_one_minus_alphas_cum_prod.to(
             t.device
-        )
+        )[t]
         return (
             xt - (1 - alpha) / sqrt_one_minus_alphas_cum_prod * noise
         ) * alpha**-0.5 + beta * z

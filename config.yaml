@@ -26,6 +26,7 @@ unet:
   num_blocks: 2
   num_mid_blocks: 2
   drop_prob: 0.1
+  num_groups: 32
   attention:
     - False
     - True

@@ -93,7 +93,7 @@ def train(
             output = model(noisy_images, timesteps)
             loss: Tensor = criterion(noise, output)
             # Backward pass
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
@@ -110,7 +110,7 @@ def main(rank: int, cfg: dict) -> None:
     ddp_setup(rank, world_size, gpu_id)
     data_loader = _build_data_loader(_build_dataset(cfg["dataset"]), cfg["batch_size"])
     # UNet backbone
-    model = _build_model(cfg)
+    model = _build_model(cfg).to(gpu_id)
     criterion = nn.MSELoss()
     optimizer = Adam(model.parameters())
     model = DDP(model, device_ids=[gpu_id])
