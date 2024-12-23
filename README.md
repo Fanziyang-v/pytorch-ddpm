@@ -1,7 +1,11 @@
 # PyTorch Implementation for DDPM
-This is a PyTorch implementation for the [Denoising Diffusion Probabilistic Model](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html). Based on the official [Tensorflow implementation](https://github.com/hojonathanho/diffusion), we implement DDPM in PyTorch, which is more readable than the official counterpart. Besides, this implementation supports multi-GPU training with the help of the `DistributedDataParallel` library. We put all the parameters into a configuration file and access them in code. So you can modify your settings as you like. The authors select the U-Net backbone for noise prediction and adjust it with time embeddings. All the default hyperparameter values are the same as DDPM.
+This is a PyTorch implementation for the [Denoising Diffusion Probabilistic Model](https://proceedings.neurips.cc/paper/2020/hash/4c5bcfec8584af0d967f1ab10179ca4b-Abstract.html). Based on the official [Tensorflow implementation](https://github.com/hojonathanho/diffusion), we implement DDPM in PyTorch, which is more readable than the official counterpart. Besides, this implementation supports multi-GPU training with the help of the `DistributedDataParallel` library. We put all the parameters into a configuration file and access them in code. So you can modify your settings as you like. The authors select the U-Net backbone for noise prediction and adjust it with time embeddings. All the default hyperparameter values are nearly the same as DDPM except that we don't use EMA in our training for simplicity.
 
-**Note**: We can specify which GPUs we want to use in [config.yaml](./config.yaml) file if our machine has multiple GPUs.
+**Note**: If our machine has multiple GPUs, we can specify which GPUs to use in the [config](./config.yaml) file.
+
+Here are 400 generated samples on CIFAR10.
+
+![samples](./assets/samples.png)
 
 ## Authors
 
