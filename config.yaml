@@ -35,4 +35,4 @@ unet:
   resample_with_conv: True
 # Sampling params
 sample_dir: samples
-num_samples: 16
+num_samples: 400
