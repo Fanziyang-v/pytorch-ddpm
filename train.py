@@ -101,7 +101,7 @@ def train(
         avg_loss = total_loss / len(data_loader)
         print(f"GPU[{gpu_id}], Epoch: [{i + 1}]/[{num_epochs}], loss: {avg_loss}")
         if (i + 1) % cfg["interval"] == 0 and gpu_id == cfg["gpu_ids"][rank]:
-            torch.save(model.module.state_dict(), os.path.join(cfg["ckpt_dir"], f"{cfg["dataset"]}_{i + 1}.pth"))
+            torch.save(model.module.state_dict(), os.path.join(cfg["ckpt_dir"], cfg["dataset"], f"noise_predicter_{i + 1}.pth"))
 
 
 def main(rank: int, cfg: dict) -> None:

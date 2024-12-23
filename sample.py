@@ -29,7 +29,7 @@ def _build_model(cfg: dict) -> UNet:
 
 
 def sample(cfg: dict, model: UNet, diffusion: GaussianDiffusion) -> None:
-    num_samples = 64
+    num_samples = cfg["num_samples"]
     num_timesteps = cfg["num_timesteps"]
     model.eval()
     x = torch.randn(num_samples, 3, 32, 32).to(device)
@@ -39,12 +39,22 @@ def sample(cfg: dict, model: UNet, diffusion: GaussianDiffusion) -> None:
         output = model(x, timesteps)
         x = diffusion.reverse(x, output, timesteps)
         torch.cuda.empty_cache()
-    img_grid = make_grid(_denormomalize(x), nrow=4, padding=2)
+    img_grid = make_grid(_denormomalize(x), nrow=int(num_samples**0.5), padding=2)
     save_image(img_grid, os.path.join(cfg["sample_dir"], "samples.png"))
 
 
 def main(cfg: dict) -> None:
     model = _build_model(cfg["unet"]).to(device)
+    # load noise predicter checkpoints
+    model.load_state_dict(
+        torch.load(
+            os.path.join(
+                cfg["ckpt_dir"],
+                cfg["dataset"],
+                "noise_predicter_" + str(cfg["num_epochs"] + ".pth"),
+            )
+        )
+    )
     diffusion = GaussianDiffusion(
         num_timesteps=cfg["num_timesteps"],
         beta_start=cfg["beta_start"],
@@ -58,4 +68,6 @@ if __name__ == "__main__":
 
     with open("config.yaml", "r") as file:
         cfg = yaml.safe_load(file)
+    if not os.path.exists(cfg["sample_dir"]):
+        os.makedirs(cfg["sample_dir"])
     main(cfg)
